@@ -1,56 +1,61 @@
 The program computes and draws an animation of vorticity of a flow around a square through a closed water channel at 50 < Re < 300. Von Karman vortex street is present.
 
-
-=================================================================
-
-
-Program oblicza przep³yw równoleg³ego na wejœciu strumienia p³ynu, przez prostok¹tny kana³ o skoñczonej d³ugoœci w liczbie wymiarów 2D. Profil prêdkoœci na wylocie za³o¿ony równoleg³y. W odleg³oœci po³owy szerokoœci kana³u od jego wlotu znajduje siê przeszkoda w postaci kwadratu.
-
-Po otworzeniu pliku main mamy mo¿liwoœæ modyfikacji ustawieñ wejœciowych, poprzez zmianê nastêpuj¹cych parametrów globalnych:
+The attached pdf file, although corcerns a little different problem, describes most of CFD algorithms implemented in this program.
 
 
 =================================================================
 
 
-int n = 20	/* Iloœæ podzia³ów boku op³ywanego kradratu o boku 1.
-Zwiêkszaj¹c tê wartoœæ zwiêkszamy rozmiar kwadratu, przy zachowaniu tych samych wymiarów kana³u */
+Program oblicza przepÅ‚yw rÃ³wnolegÅ‚ego na wejÅ›ciu strumienia pÅ‚ynu, przez prostokÄ…tny kanaÅ‚ o skoÅ„czonej dÅ‚ugoÅ›ci w liczbie wymiarÃ³w 2D. Profil prÄ™dkoÅ›ci na wylocie zaÅ‚oÅ¼ony rÃ³wnolegÅ‚y. W odlegÅ‚oÅ›ci poÅ‚owy szerokoÅ›ci kanaÅ‚u od jego wlotu znajduje siÄ™ przeszkoda w postaci kwadratu.
 
-double Re = 250;		/* Liczba Reynoldsa (policzona dla prêdkoœci strumienia na wlocie */
+DoÅ‚Ä…czony plik pdf, choÄ‡ dotyczy nieco innego zagadnienia, zawiera szczegÃ³Å‚owy opis zaimplementowanych w programie algorytmÃ³w.
 
-double dt = 0.001;	/* D³ugoœæ jednego kroku czasowego. Dla wiêkszych Re nale¿y tê wartoœæ zmniejszyæ, aby zachowaæ zbie¿noœæ programu. */
 
-double eps = 1e-4;    /* dokladnosc liczenia dyskretyzacji w przestrzeni. Zmniejszenie tej wartoœci mo¿e zmniejszyæ b³êdy numeryczne. */
+=================================================================
+
+
+Po otworzeniu pliku main mamy moÅ¼liwoÅ›Ä‡ modyfikacji ustawieÅ„ wejÅ›ciowych, poprzez zmianÄ™ nastÄ™pujÄ…cych parametrÃ³w globalnych:
+
+
+int n = 20	/* IloÅ›Ä‡ podziaÅ‚Ã³w boku opÅ‚ywanego kradratu o boku 1.
+ZwiÄ™kszajÄ…c tÄ™ wartoÅ›Ä‡ zwiÄ™kszamy rozmiar kwadratu, przy zachowaniu tych samych wymiarÃ³w kanaÅ‚u */
+
+double Re = 250;		/* Liczba Reynoldsa (policzona dla prÄ™dkoÅ›ci strumienia na wlocie */
+
+double dt = 0.001;	/* DÅ‚ugoÅ›Ä‡ jednego kroku czasowego. Dla wiÄ™kszych Re naleÅ¼y tÄ™ wartoÅ›Ä‡ zmniejszyÄ‡, aby zachowaÄ‡ zbieÅ¼noÅ›Ä‡ programu. */
+
+double eps = 1e-4;    /* dokladnosc liczenia dyskretyzacji w przestrzeni. Zmniejszenie tej wartoÅ›ci moÅ¼e zmniejszyÄ‡ bÅ‚Ä™dy numeryczne. */
                                              
-int N = 200 + 1;		// iloœæ pól siatki w kierunku poziomym								
-int M = 100 + 1;		// iloœæ pól siatki w kierunku pionowym	
+int N = 200 + 1;		// iloÅ›Ä‡ pÃ³l siatki w kierunku poziomym								
+int M = 100 + 1;		// iloÅ›Ä‡ pÃ³l siatki w kierunku pionowym	
 
-double skala = 10.;   /* im wieksza wartosc 'skala', tym mocniej mniejsza roznica wartosci pól zmienia kolor w koñcowych obrazkach. */
+double skala = 10.;   /* im wieksza wartosc 'skala', tym mocniej mniejsza roznica wartosci pÃ³l zmienia kolor w koÅ„cowych obrazkach. */
       
                                                                   
 =================================================================
 
 
-Program sam wylicza prêdkoœæ strumienia wejœciowego, lepkoœæ kinematyczn¹ i liczbê Stroughala zapewniaj¹ce optymalne wyniki.	
+Program sam wylicza prÄ™dkoÅ›Ä‡ strumienia wejÅ›ciowego, lepkoÅ›Ä‡ kinematycznÄ… i liczbÄ™ Stroughala zapewniajÄ…ce optymalne wyniki.	
 
-Wymiary kana³u:
+Wymiary kanaÅ‚u:
 
-D³ugoœæ boku kwadratu = 1 jednostka [j]
-D³ugoœæ kana³u 		= N / n [j]
-Szerokoœæ kana³u 	= M / n [j]
+DÅ‚ugoÅ›Ä‡ boku kwadratu = 1 jednostka [j]
+DÅ‚ugoÅ›Ä‡ kanaÅ‚u 		= N / n [j]
+SzerokoÅ›Ä‡ kanaÅ‚u 	= M / n [j]
 
 
 
-Wywo³anie komendy "benchmark(eps);" na pocz¹tku programu powoduje rozpoczêcie obliczeñ nastêpuj¹cego równania ró¿niczkowego:
+WywoÅ‚anie komendy "benchmark(eps);" na poczÄ…tku programu powoduje rozpoczÄ™cie obliczeÅ„ nastÄ™pujÄ…cego rÃ³wnania rÃ³Å¼niczkowego:
 
 laplasjan(psi) = 1 na danej siatce N x M
 
-Jako wynik zwraca czas obliczeñ (do okna programu) oraz plik obrazkowy "laplasjan.png" (do folderu "animacja" utworzonego w folderze z plikem "main.cpp") przedstawiaj¹cy pokolorowany obrazek pola "psi" (skala kolorów zale¿y od wartoœci parametru "skala").
+Jako wynik zwraca czas obliczeÅ„ (do okna programu) oraz plik obrazkowy "laplasjan.png" (do folderu "animacja" utworzonego w folderze z plikem "main.cpp") przedstawiajÄ…cy pokolorowany obrazek pola "psi" (skala kolorÃ³w zaleÅ¼y od wartoÅ›ci parametru "skala").
 
 
 =================================================================
 
 
-W oknie programu podczas obliczeñ wyœwietlane s¹ nastêpuj¹ce dane, zawsze w momencie zapisu klatki czasowej do pliku graficznego ".bmp":
+W oknie programu podczas obliczeÅ„ wyÅ›wietlane sÄ… nastÄ™pujÄ…ce dane, zawsze w momencie zapisu klatki czasowej do pliku graficznego ".bmp":
 
 k = 1600, U = 0.25, T = 1.600000
 czas kroku = 4.406s
@@ -58,14 +63,14 @@ min = -22.230503
 max = 18.383575
 
 
-- k oznacza iloœæ obliczonych do tej pory kroków czasowych
-- U oznacza prêdkoœæ wlotow¹ do kana³u w [j / s]
+- k oznacza iloÅ›Ä‡ obliczonych do tej pory krokÃ³w czasowych
+- U oznacza prÄ™dkoÅ›Ä‡ wlotowÄ… do kanaÅ‚u w [j / s]
 - T oznacza aktualny czas ( k * dt) zapisywanej klatki czasowej.
-- min/max oznaczaj¹ minimaln¹/maksymaln¹ wartoœæ danego pola w obszarze kana³u.
+- min/max oznaczajÄ… minimalnÄ…/maksymalnÄ… wartoÅ›Ä‡ danego pola w obszarze kanaÅ‚u.
 
-Klatki czasowe zapisywane s¹ w formacie "t = T.bmp" w folderze "animacja", automatycznie tworzonym w folderze z plikiem "main.cpp".
+Klatki czasowe zapisywane sÄ… w formacie "t = T.bmp" w folderze "animacja", automatycznie tworzonym w folderze z plikiem "main.cpp".
 
-Standardowo zapisywane do plików graficznych s¹ pola wirowoœci (omega). Mo¿liwe jest zapisywanie równie¿ pól: 'psi' (funkcja pr¹du) oraz sk³adowych prêdkoœci ('v_x', 'v_y', 'v_modul'). W tym celu nale¿y podmieniæ nastêpuj¹c¹ komendê w bloku int main():
+Standardowo zapisywane do plikÃ³w graficznych sÄ… pola wirowoÅ›ci (omega). MoÅ¼liwe jest zapisywanie rÃ³wnieÅ¼ pÃ³l: 'psi' (funkcja prÄ…du) oraz skÅ‚adowych prÄ™dkoÅ›ci ('v_x', 'v_y', 'v_modul'). W tym celu naleÅ¼y podmieniÄ‡ nastÄ™pujÄ…cÄ… komendÄ™ w bloku int main():
 
 Gauss_Seidel(-0.5, omega, 200, eps);
 
